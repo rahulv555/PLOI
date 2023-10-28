@@ -15,7 +15,7 @@ import os
 
 
 def train_model(model, dataloaders, criterion, optimizer, use_gpu, print_iter=10, 
-                save_iter=100, save_folder='/tmp', num_epochs=1000, global_criterion=None,
+                save_iter=100, save_folder='tmp', num_epochs=1000, global_criterion=None,
                 return_last_model_weights=True):
     """Optimize the model and save checkpoints
     """
@@ -95,7 +95,9 @@ def train_model(model, dataloaders, criterion, optimizer, use_gpu, print_iter=10
             print("running_loss:", running_loss, flush=True)
 
         if epoch % save_iter == 0:
-            save_path = os.path.join(save_folder, "model" + str(epoch) + ".pt")
+            # save_path = os.path.join(save_folder, "model" + str(epoch) + ".pt")
+           
+            save_path='tmp/'+save_folder+"model" + str(epoch) + ".pt"
             torch.save(model.state_dict(), save_path)
             print("Saved model checkpoint {}".format(save_path))
 

@@ -23,7 +23,7 @@ class GNNSearchGuidance(BaseSearchGuidance):
     def __init__(self, training_planner, num_train_problems, num_epochs,
                  criterion_name, bce_pos_weight, load_from_file,
                  load_dataset_from_file, dataset_file_prefix,
-                 save_model_prefix, is_strips_domain):
+                 save_model_prefix, is_strips_domain, seed):
         super().__init__()
         self._planner = training_planner
         self._num_train_problems = num_train_problems
@@ -35,6 +35,7 @@ class GNNSearchGuidance(BaseSearchGuidance):
         self._dataset_file_prefix = dataset_file_prefix
         self._save_model_prefix = save_model_prefix
         self._is_strips_domain = is_strips_domain
+        self._seed=seed
         # Initialize other instance variables.
         self._model = None
         self._unary_types = None
@@ -86,7 +87,7 @@ class GNNSearchGuidance(BaseSearchGuidance):
             # Train model
             model_dict = train_model(self._model, dataloaders,
                                      criterion=criterion, optimizer=optimizer,
-                                     use_gpu=False, num_epochs=self._num_epochs)
+                                     use_gpu=False, num_epochs=self._num_epochs, save_folder='tmp'+str(self._seed))
             torch.save(model_dict, model_outfile)
             self._model.load_state_dict(model_dict)
             print("Saved model to {}.".format(model_outfile))
@@ -124,8 +125,9 @@ class GNNSearchGuidance(BaseSearchGuidance):
                       flush=True)
                 env.fix_problem_index(idx)
                 state, _ = env.reset()
+                
                 try:
-                    plan = self._planner(env.domain, state, timeout=60)
+                    plan = self._planner(env.domain, state, timeout=500)
                 except (PlanningTimeout, PlanningFailure):
                     print("Warning: planning failed, skipping: {}".format(
                         env.problems[idx].problem_fname))

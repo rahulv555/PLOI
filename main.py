@@ -8,8 +8,10 @@ from planning import PlanningTimeout, PlanningFailure, FD, \
 from guidance import NoSearchGuidance, GNNSearchGuidance
 
 
-def _test_planner(planner, domain_name, num_problems, timeout):
+def _test_planner(planner, domain_name, num_problems, timeout, seed):
     print("Running testing...")
+    print(domain_name)
+    print("PDDLEnv{}-v0".format(domain_name))
     env = pddlgym.make("PDDLEnv{}-v0".format(domain_name))
     num_problems = min(num_problems, len(env.problems))
     for problem_idx in range(num_problems):
@@ -63,6 +65,7 @@ def _create_guider(guider_name, planner_name, num_train_problems,
             save_model_prefix=os.path.join(
                 model_dir, "bce10_model_last_seed{}".format(seed)),
             is_strips_domain=is_strips_domain,
+            seed=seed
         )
     raise Exception("Unrecognized guider name '{}'.".format(guider_name))
 
@@ -103,6 +106,7 @@ def _run(domain_name, train_planner_name, test_planner_name,
                                 num_train_problems, is_strips_domain,
                                 num_epochs, seed)
         guider.seed(seed)
+        
         guider.train(domain_name)
 
         if do_incremental_planning:
@@ -111,9 +115,9 @@ def _run(domain_name, train_planner_name, test_planner_name,
                 base_planner=planner, search_guider=guider, seed=seed)
         else:
             planner_to_test = planner
-
+        
         _test_planner(planner_to_test, domain_name+"Test",
-                      num_problems=num_test_problems, timeout=timeout)
+                      num_problems=num_test_problems, timeout=timeout, seed=seed)
     print("\n\nFinished run\n\n\n\n")
 
 

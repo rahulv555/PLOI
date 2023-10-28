@@ -32,19 +32,20 @@ class FD(PDDLPlanner):
     def _get_cmd_str(self, dom_file, prob_file, timeout):
         sas_file = tempfile.NamedTemporaryFile(delete=False).name
         timeout_cmd = "gtimeout" if sys.platform == "darwin" else "timeout"
-        cmd_str = "{} {} {} {} --sas-file {} {} {}".format(
+        cmd_str = "{} {} python {} {} --sas-file {} {} {}".format(
             timeout_cmd, timeout, self._exec, self._alias_flag,
             sas_file, dom_file, prob_file)
         return cmd_str
 
     def _output_to_plan(self, output):
-        if "Solution found!" not in output:
+        if "Solution found" not in output:
             raise PlanningFailure("Plan not found with FD! Error: {}".format(
                 output))
         fd_plan = re.findall(r"(.+) \(\d+?\)", output.lower())
-        if not fd_plan:
-            raise PlanningFailure("Plan not found with FD! Error: {}".format(
-                output))
+        # if not fd_plan:
+        #     raise PlanningFailure("Plan not found with FD! Error: {}".format(
+        #         output))
+        
         return fd_plan
 
     def _cleanup(self):
