@@ -5,8 +5,8 @@ DOMAIN_NAME="Blocks"
 # DOMAIN_NAME="Logistics"
 # DOMAIN_NAME="Hanoi"
 
-METHOD="PLOI"
-# METHOD="Improved PLOI"
+# METHOD="PLOI"
+METHOD="Improved PLOI"
 # METHOD="Pure Plan"
 # METHOD="Rand Score"
 

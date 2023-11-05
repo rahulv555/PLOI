@@ -2,6 +2,7 @@
 import os
 import time
 import argparse
+from guidance.rfgnn_guidance import RF_GNNSearchGuidance
 import pddlgym
 from planning import PlanningTimeout, PlanningFailure, FD, \
     validate_strips_plan, verify_validate_installed, IncrementalPlanner
@@ -57,6 +58,21 @@ def _create_guider(guider_name, planner_name, num_train_problems,
             training_planner=planner,
             num_train_problems=num_train_problems,
             num_epochs=num_epochs,
+            criterion_name="bce",
+            bce_pos_weight=10,
+            load_from_file=True,
+            load_dataset_from_file=True,
+            dataset_file_prefix=os.path.join(model_dir, "training_data"),
+            save_model_prefix=os.path.join(
+                model_dir, "bce10_model_last_seed{}".format(seed)),
+            is_strips_domain=is_strips_domain,
+            seed=seed
+        )
+    if guider_name=="rf-gnn-bce-10":
+        planner = _create_planner(planner_name)
+        return RF_GNNSearchGuidance(
+            training_planner=planner,
+            num_train_problems=num_train_problems,
             criterion_name="bce",
             bce_pos_weight=10,
             load_from_file=True,
