@@ -6,8 +6,8 @@ DOMAIN_NAME="Blocks"
 # DOMAIN_NAME="Hanoi"
 
 # METHOD="PLOI"
-METHOD="Improved PLOI"
-# METHOD="Pure Plan"
+# METHOD="Improved PLOI"
+METHOD="Pure Plan"
 # METHOD="Rand Score"
 
 if [ "$METHOD" = "PLOI" ]
@@ -23,7 +23,7 @@ fi
 
 if [ "$METHOD" = "Pure Plan" ]
 then
-    cmd_str="python main.py --domain_name $DOMAIN_NAME --test_planner_name fd-lama-first --guider_name no-guidance --num_seeds 10 --num_test_problems 10 --do_incremental_planning 0 --timeout 120"
+    cmd_str="python main.py --domain_name $DOMAIN_NAME --test_planner_name fd-lama-first --guider_name no-guidance --num_seeds 10 --num_test_problems 10 --do_incremental_planning 0 --timeout 500 > output_pureplan.txt"
 fi
 
 if [ "$METHOD" = "Rand Score" ]
